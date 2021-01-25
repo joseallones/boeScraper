@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <style type="text/css">
+        .br {
+            display: block;
+            margin-bottom: 0em;
+        }
+
+        .brmedium {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+
+        .brlarge {
+            display: block;
+            margin-bottom: 2em;
+        }
+    </style>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vacantes en el Sector Público</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma-tooltip@2.0.2/dist/css/bulma-tooltip.min.css"
+    />
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+    ></script>
+  </head>
+
+  <body>
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">Vacantes en el Sector Público</h1>
+          <h2 class="subtitle">
+<!--             Basado en udc.gal/pdi y uvigo.gal-->
+<!--            <a href="https://www.danielprimo.io/blog/web-scrapping-con-python-primeros-pasos-desafiopython">↗️ ¿Qué es esto?</a-->
+          </h2>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2>
+          Información actualizada el {{ date.day }}/{{ date.month }}/{{ date.year }}
+          <br>
+          {% if rama  -%}
+                  Rama {{ rama }}
+          {% endif %}
+        </h2>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Organismo</th>
+              <th>Fecha</th>
+              <th>Título</th>
+              <th>Ramas</th>
+              <th style="min-width:300px" >Detalle</th>
+              <th>Enlaces</th>
+            </tr>
+          </thead>
+          {% for item in post_jobs %}
+            {% if check_is_active=='false' or item.active == 'yes' -%}
+              {% if rama  -%}
+                {% if rama not in item.ramas %}
+                    {% continue %}
+                {% endif %}
+              {% endif %}
+
+              {% if not rama  -%}
+                {% if 'Ayuda' in item.ramas %}
+                    {% continue %}
+                {% endif %}
+              {% endif %}
+
+              <tr>
+                <td>{{ item.org }}</td>
+                <td>{{ item.date_short }}</td>
+                <td>
+                  {{ item.title }}
+                </td>
+                <td style="color:blue">
+                {% for r in item.ramas %}
+                  #{{ r }}
+                  </br>
+                {% endfor %}
+                </td>
+                <td style="min-width:100px" >{{item.title_pdf|safe}}</td>
+                <td>
+                  {% if item.url is defined -%}
+                    <a href="{{ item.url }}"><i class="fas fa-link"></i>Link</a> </br>
+                  {% endif %}
+
+                  {% if item.url_link is defined -%}
+                    <a href="{{ item.url_link }}"><i class="fas fa-link"></i>PDF</a>
+                  {% endif %}
+
+                  {% if item.dog_url is defined -%}
+                    <a href="{{ item.dog_url }}"><i class="fas fa-link"></i>DOG</a>
+                  {% endif %}
+
+                  {% if item.boe_url is defined -%}
+                    <a href="{{ item.boe_url }}"><i class="fas fa-link"></i>BOE</a>
+                  {% endif %}
+
+                  {% if item.bop_url is defined -%}
+                    <a href="{{ item.bop_url }}"><i class="fas fa-link"></i>BOP</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    </section>
+  </body>
+</html>
